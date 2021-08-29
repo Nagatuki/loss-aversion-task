@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>慶應義塾大学 理工学部 牛場研究室 Loss Aversion Task</title>
+        <meta charset="utf-8" />
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </head>
+
+    <body>
+        <!-- <nav class="grey darken-3" role="navigation">
+            <div class="nav-wrapper container">
+                <a id="logo-container" href="/" class="brand-logo">牛場研究室</a>
+            </div>
+        </nav> -->
+
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m6">
+                    <h4> {{trial + 1}}試行目</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s6 m6"><div class="card small">
+                    <div class="card-content center">
+                        <h1 style="color:green; font-weight: bold"> 
+                             +{{gain}} 円
+                        </h1>
+                    </div>
+                </div></div>
+                <div class="col s6 m6"><div class="card small">
+                    <div class="card-content center">
+                        <h1 style="color:red; font-weight: bold"> 
+                            -{{loss}} 円
+                        </h1>
+                    </div>
+                </div></div>
+            </div>
+
+            <div class="row">
+                <div class="col s3 m3 l3 xl2 offset-s2 offset-m2 offset-l2 offset-xl3">
+                <div class="input-field center">
+                    <form action="/task_{{id}}" method="GET" id="form-accept">
+                        <input type="radio" form="form-accept" name="trial" value="{{trial}}" checked style="visibility:hidden">
+                        <button class="btn-large grey" type="submit" formaction="/task_{{id}}" name="choice" value="accept" style="font-size:xx-large;">受容</button>
+                    </form>
+                </div></div>
+                <div class="col s3 m3 l3 xl2 offset-s2 offset-m2 offset-l2 offset-xl2">
+                <div class="input-field center">
+                    <form action="/task_{{id}}" method="GET" id="form-reject">
+                        <input type="radio" form="form-reject" name="trial" value="{{trial}}" checked style="visibility:hidden">
+                        <button class="btn-large grey" type="submit" formaction="/task_{{id}}" name="choice" value="reject" style="font-size:xx-large;">拒否</button>
+                    </form>
+                </div></div>
+            </div>
+
+        </div>
+    </body>
+</html>
