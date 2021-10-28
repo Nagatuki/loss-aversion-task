@@ -1,0 +1,2 @@
+gain_min,gain_max,gain_step,loss_min,loss_max,loss_step
+1000,4000,200,500,2000,100

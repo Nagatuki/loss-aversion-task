@@ -13,11 +13,14 @@ class Task:
         self.task_list: list[tuple[int, int]] = []
 
     def init_task_list(self):
-        # params
-        gain_min, gain_max = 1000, 4000
-        loss_min, loss_max = 500, 2000
-        gain_step = 200
-        loss_step = 100
+        gain_min, gain_max, gain_step = 0, 0, 0
+        loss_min, loss_max, loss_step = 0, 0, 0
+
+        with open("setting.csv") as f:
+            reader = csv.reader(f)
+            data = [row for row in reader]
+            gain_min, gain_max, gain_step = data[1][0], data[1][1], data[1][2]
+            loss_min, loss_max, loss_step = data[1][3], data[1][4], data[1][5]
 
         # create task list
         gain_list = [val for val in range(gain_min, gain_max + 1, gain_step)]
@@ -40,7 +43,7 @@ class Task:
             size = len(pre_trial_list)
 
     def set_trial_list(self, trial_list: list[tuple[int, int]]):
-        self.trial_list = trial_list 
+        self.trial_list = trial_list
 
     def get_trial_list(self) -> list[tuple[int, int]]:
         return self.trial_list
@@ -70,7 +73,7 @@ class TaskResult:
         self.subjects = {}
 
         start_time_dt = dt.now()
-        self.start_time = start_time_dt.strftime('%Y-%m-%d-%H-%M-%S')
+        self.start_time = start_time_dt.strftime("%Y-%m-%d-%H-%M-%S")
 
         # create output dir
         try:
@@ -78,7 +81,9 @@ class TaskResult:
         except Exception:
             pass
 
-    def set_result(self, id: str, name: str, num: int, gain: str, loss: str, choice: str):
+    def set_result(
+        self, id: str, name: str, num: int, gain: str, loss: str, choice: str
+    ):
         if id not in self.subjects:
             self.subjects[id] = {}
             self.subjects[id]["name"] = name
@@ -90,7 +95,11 @@ class TaskResult:
         # output result as csv
         name = self.subjects[id]["name"]
         result = self.subjects[id]["result"]
-        with open("output/{}/{}_{}_result.csv".format(self.start_time,name, id), "w", newline="") as f:
+        with open(
+            "output/{}/{}_{}_result.csv".format(self.start_time, name, id),
+            "w",
+            newline="",
+        ) as f:
             writer = csv.writer(f)
             for each in result:
                 writer.writerow(each)
@@ -122,9 +131,9 @@ class Subject:
         ret_dict["name"] = self.name
         ret_dict["task"] = {
             "current_num": self.task.get_current_num(),
-            "task": self.task.get_trial_list()
+            "task": self.task.get_trial_list(),
         }
-        return ret_dict 
+        return ret_dict
 
     def is_same_id(self, id: str) -> bool:
         return self.id == id
@@ -147,7 +156,7 @@ class SubjectList:
         self.subject_list: list[Subject] = []
 
     def load(self):
-        json_open = open('subject_list.json', 'r')
+        json_open = open("subject_list.json", "r")
         subject_list_json_dict = json.load(json_open)
 
         for subject_json_dict in subject_list_json_dict["subjects"]:
@@ -160,13 +169,13 @@ class SubjectList:
             "subjects": [subject.to_dict() for subject in self.subject_list]
         }
 
-        json_open = open('subject_list.json', 'w')
+        json_open = open("subject_list.json", "w")
         json.dump(subject_list_json_dict, json_open, indent=4)
 
     def is_valid_id(self, id: str) -> bool:
         for subject in self.subject_list:
             if subject.is_same_id(id):
-                return True 
+                return True
         return False
 
     def get_subject(self, id: str) -> Subject:
@@ -226,7 +235,9 @@ def task(id):
         # trial check: avoid bugs related to reload
         if int(last_trial_num) == trial_num:
             trial = task.get_trial()
-            task_result.set_result(id, subject_name, trial_num + 1, trial[0], trial[1], choice)
+            task_result.set_result(
+                id, subject_name, trial_num + 1, trial[0], trial[1], choice
+            )
             task_result.save(id)
 
             # next trial
@@ -245,4 +256,4 @@ def task(id):
 
 if __name__ == "__main__":
     # デバッグモード、localhost:8888 で スレッドオフで実行
-    app.run(debug=True, host='0.0.0.0', port=8888, threaded=True)
+    app.run(debug=True, host="0.0.0.0", port=8888, threaded=True)
