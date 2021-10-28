@@ -27,7 +27,7 @@ class Task:
         for gain in gain_list:
             for loss in loss_list:
                 pre_trial_list.append((gain, loss))
-                pre_trial_list.append((gain, loss))  # それぞれ2回出てくる
+                # pre_trial_list.append((gain, loss))  # それぞれ2回出てくる
 
         self.trial_num = 0
         self.trial_list = []
