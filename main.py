@@ -14,8 +14,8 @@ class Task:
 
     def init_task_list(self):
         # params
-        gain_min, gain_max = 1000, 3000
-        loss_min, loss_max = 500, 1500
+        gain_min, gain_max = 1000, 4000
+        loss_min, loss_max = 500, 2000
         gain_step = 200
         loss_step = 100
 
