@@ -97,7 +97,7 @@ class TaskResult:
         name = self.subjects[id]["name"]
         result = self.subjects[id]["result"]
         with open(
-            "output/{}/{}_{}_result.csv".format(self.start_time, name, id),
+            "output/{}/{}_{}_result.csv".format(self.start_time, id, name),
             "w",
             newline="",
         ) as f:
