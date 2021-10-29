@@ -19,8 +19,9 @@ class Task:
         with open("setting.csv") as f:
             reader = csv.reader(f)
             data = [row for row in reader]
-            gain_min, gain_max, gain_step = data[1][0], data[1][1], data[1][2]
-            loss_min, loss_max, loss_step = data[1][3], data[1][4], data[1][5]
+            row = [int(col) for col in data[1]]
+            gain_min, gain_max, gain_step = row[0], row[1], row[2]
+            loss_min, loss_max, loss_step = row[3], row[4], row[5]
 
         # create task list
         gain_list = [val for val in range(gain_min, gain_max + 1, gain_step)]
