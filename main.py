@@ -111,10 +111,13 @@ class TaskResult:
 
 
 class Subject:
-    def __init__(self):
-        self.id = ""
-        self.name = ""
+    def __init__(self, id: str, name: str):
+        self.id = id
+        self.name = name
         self.task: Task = Task()
+
+    def init(self):
+        self.task.init_task_list()
 
     def init_from_dict(self, subject_dict: dict):
         self.id = subject_dict["id"]
@@ -151,27 +154,44 @@ class Subject:
     def get_task(self) -> Task:
         return self.task
 
+    def save(self):
+        file_name = "data/{}_{}.json".format(self.id, self.name)
+        json_open = open(file_name, "w")
+        json.dump(self.to_dict(), json_open, indent=4)
+
+    def load(self):
+        file_name = "data/{}_{}.json".format(self.id, self.name)
+
+        if os.path.exists(file_name):
+            json_open = open(file_name)
+            subject_dict = json.load(json_open)
+            self.init_from_dict(subject_dict)
+        else:
+            self.init()
+
 
 class SubjectList:
     def __init__(self):
         self.subject_list: list[Subject] = []
 
     def load(self):
+        # read subject list
         json_open = open("subject_list.json", "r")
         subject_list_json_dict = json.load(json_open)
 
+        # read task of each subject
         for subject_json_dict in subject_list_json_dict["subjects"]:
-            subject = Subject()
-            subject.init_from_dict(subject_json_dict)
+            id = subject_json_dict["id"]
+            name = subject_json_dict["name"]
+
+            subject = Subject(id, name)
+            subject.load()
+
             self.subject_list.append(subject)
 
     def save(self):
-        subject_list_json_dict = {
-            "subjects": [subject.to_dict() for subject in self.subject_list]
-        }
-
-        json_open = open("subject_list.json", "w")
-        json.dump(subject_list_json_dict, json_open, indent=4)
+        for subject in self.subject_list:
+            subject.save()
 
     def is_valid_id(self, id: str) -> bool:
         for subject in self.subject_list:
@@ -184,12 +204,6 @@ class SubjectList:
             if subject.is_same_id(id):
                 return subject
         return None
-
-    def add_subject(self, id: str, name: str):
-        new_dict = {"id": id, name: name}
-        new_subject = Subject
-        new_subject.init_from_dict(new_dict)
-        self.subject_list.append(new_subject)
 
 
 subject_list = SubjectList()
